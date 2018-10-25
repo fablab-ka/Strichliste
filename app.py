@@ -1,7 +1,7 @@
 from bottle import Bottle, route, run, debug, template, static_file, request, error
 import json
 import datetime
-import database
+import demo_database as database
 
 app = Bottle()
 selected_customer = None
