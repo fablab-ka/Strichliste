@@ -24,6 +24,16 @@ body {
     grid-template-columns: auto auto auto auto auto auto auto auto auto;*/
 }
 
+.arr {
+   width:60px;
+   height:60px;
+}
+
+.num {
+    width:60px;
+    height:60px;
+}
+
 .box {
     width:100px;
     height:100px;

@@ -20,7 +20,8 @@
 %end
 </div>
 
-<input class="btn" type="button"" onclick="location.href='/'" value="Zurück">
+<input class="btn" type="button" onclick="location.href='/'" value="Zurück">
+<input class="btn" style="width:300px" type="button" onclick="location.href='/cash_payin'" value="Geld einzahlen">
 
 
 <form action="/product_barcode" method="post">
