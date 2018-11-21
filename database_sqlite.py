@@ -84,3 +84,12 @@ def buy(customer, product):
     product_price = res["price"]
     update_db('UPDATE customer SET credit = credit - ? WHERE id = ?', float(product_price), str(customer))
     return
+
+def create_user(username, rfid):
+    connection = sqlite3.connect('datenbank.db')
+    cursor = connection.cursor()
+    cursor.execute('INSERT INTO customer (name, rfid) VALUES ? ?', (username, rfid)).fetchall()
+    connection.commit()
+    cursor.close()
+    connection.close()
+    return None
