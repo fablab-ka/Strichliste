@@ -9,8 +9,8 @@ document.onkeyup = function (evt) {
     {
         document.forms[0].submit();;
     } else {
-        let key = Number(evt.key)
-        if(!isNaN(key))
+        //let key = Number(evt.key)
+        //if(!isNaN(key))
         bar.value += evt.key;
     };
 }

@@ -73,6 +73,15 @@ def submit_barcode():
     select_customer(customer)
     return template('product.tpl', product=customer)
 
+@app.get('/create_customer')
+def create_user():
+    return template('create_user.tpl')
+
+@app.post('/new_user')
+def new_user():
+    name = request.forms.get('name')
+    pin = request.forms.get('pin')
+    rfid = request.forms.get('rfid')
 
 #debug(True)
 run(app, host='127.0.0.1', port=8081)

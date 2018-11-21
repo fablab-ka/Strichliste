@@ -21,7 +21,7 @@
 </div>
 
 <form action="/product_barcode" method="post">
-    <input style="display:none" id="barcode" type="text" name="barcode">
+    <input style="display:none" id="barcode" type="number" name="barcode">
 </form>
 <script language="javascript" type="text/javascript" src="/static/js/barcode.js"></script>
 
