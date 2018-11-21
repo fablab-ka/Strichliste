@@ -79,7 +79,6 @@ def get_customers():
     customers = []
     for row in result:
         balance = get_balance(row[0])[0][0]
-        pprint(balance)
         customer = {'id': row[0], 'name':row[1], 'credit': balance, 'rfid': row[2]}
         customers.append(customer)
     return customers
@@ -96,7 +95,6 @@ def get_product_by_id(id):
     result = run_query('SELECT * FROM product WHERE id=?', id)
     result = result[0]
     product = {'id': result[0], 'name': result[1], 'price': float(result[2]), 'ean13': result[3]}
-    pprint(product)
     return product
 
 def get_product_by_barcode(barcode):
@@ -141,7 +139,7 @@ def get_customer_by_id(id):
     customer = {'id': id, 'name': result[1], 'credit': balance, 'rfid': result[2]}    ### FIXM
     return customer
 
-def register_transaction(customer, product):
+def buy(customer, product):
     """Processes a sales order, writes the current price and timestamp for history
 
     Args:
@@ -157,6 +155,25 @@ def register_transaction(customer, product):
     cursor = connection.cursor()
     cursor.execute('INSERT INTO `transaction` (c_id, p_id, amount) VALUES (?, ?, ?)',
                    (int(customer), int(product), float(price))).fetchall()
+    connection.commit()
+    cursor.close()
+    connection.close()
+    return None
+
+def register_transaction(customer, amount):
+    """Processes a payment, writes the amount and timestamp for history
+
+    Args:
+        customer (int): Customer ID
+        amount (float): amount of payment
+
+    Returns:
+        None: Success / Fail need to be implemented ###TODO
+    """
+    connection = sqlite3.connect('datenbank.db')
+    cursor = connection.cursor()
+    res = cursor.execute('INSERT INTO `transaction` (c_id, p_id, amount) VALUES (?, ?, ?)',
+                   (customer, 1, float(amount))).fetchall
     connection.commit()
     cursor.close()
     connection.close()
