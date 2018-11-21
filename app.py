@@ -42,7 +42,7 @@ def sel_customer(id):
 
 @route('/confirm')
 def confirm():
-    database.buy(request.session['customer']['id'], request.session['product']['id'])
+    database.register_transaction(request.session['customer']['id'], request.session['product']['id'])
     return show_error("Kauf erfolgreich!", timeout=2)
 
 @get('/products')
@@ -92,7 +92,7 @@ def register_payment():
 
     customer_id = request.session['customer']['id']
     print(value)
-    database.pay_money(id, value)
+    database.register_transaction(id, value)
     request.session['customer'] = database.get_customer_by_id(str(customer_id))
 
     return show_error(str(value) + "€ eingezahlt, dein neuer Kontostand beträgt "
