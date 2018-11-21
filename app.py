@@ -3,7 +3,7 @@ import bottle
 from beaker.middleware import SessionMiddleware
 import json
 import datetime
-import demo_database as database
+import database_sqlite as database
 
 session_opts = {
     'session.type': 'file',
