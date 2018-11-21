@@ -32,6 +32,11 @@ body {
 .num {
     width:60px;
     height:60px;
+    background-color: #444;
+    overflow-wrap:break-word;
+    align-items: center;
+    outline:none;
+    border:none;
 }
 
 .box {
@@ -41,12 +46,25 @@ body {
     background-color: #444;
     margin:10px;
     overflow-wrap:break-word;
-    /*display:flex;
+    display:flex;
     justify-content: center; /* align horizontal */
-    align-items: center; /* align vertical */*/
+    align-items: center; /* align vertical */
 }
 
 a {
   color: inherit;
   text-decoration: inherit;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+*:focus {
+    outline: none;
 }

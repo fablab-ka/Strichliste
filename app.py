@@ -87,12 +87,10 @@ def register_payment():
     value  = float(request.forms.get('1xx.xx')) * 100.0
     value += float(request.forms.get('x1x.xx')) * 10.0
     value += float(request.forms.get('xx1.xx')) * 1.0
-    value += float(request.forms.get('xxx.1x')) * 0.1
-    value += float(request.forms.get('xxx.x1')) * 0.01
 
     customer_id = request.session['customer']['id']
     print(value)
-    database.register_transaction(id, value)
+    database.register_transaction(customer_id, value)
     request.session['customer'] = database.get_customer_by_id(str(customer_id))
 
     return show_error(str(value) + "€ eingezahlt, dein neuer Kontostand beträgt "
