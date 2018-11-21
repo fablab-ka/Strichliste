@@ -19,6 +19,7 @@
 </a>
 %end
 </div>
+<!--<input type="button" onclick="location.href='/create_customer'" value="Neuen Benutzer anlegen">-->
 
 <form action="/customer_barcode" method="post">
     <input style="display:none" id="barcode" type="text" name="barcode">

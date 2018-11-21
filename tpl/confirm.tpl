@@ -15,10 +15,10 @@
 </ul>
 
 <form action="/confirm">
-    <input class="btn" type="submit" style="height:200px;width:200px" value="Bestätigen">
+    <input class="btn" type="submit" value="Bestätigen">
 </form>
 <form action="/">
-    <input class="btn" type="submit"style="height:200px;width:200px" value="Abbrechen">
+    <input class="btn" type="submit" value="Abbrechen">
 </form>
 
 

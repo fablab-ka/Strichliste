@@ -8,6 +8,7 @@ products = [
     {'id': 6, 'name':'Apfelsaft', 'price':1,'ean13':''},
     {'id': 7, 'name':'Mineralwasser', 'price':1,'ean13':''},
     {'id': 8, 'name':'Eis', 'price':0.5,'ean13':''},
+    {'id': 9, 'name': 'Eismiteinemsehrlangemcustomnamenderallessprengt', 'price': 0.5, 'ean13': ''},
 ]
 
 customers = [

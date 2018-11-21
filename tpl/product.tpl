@@ -5,6 +5,7 @@
 <body style="background-color:black;color:white;font-family:helvetica,sans-serif" >
 <h1>{{product['name']}}</h1>
 
+<input type="button" onclick="location.href='/'" value="Zurück">
 
 
 </body>

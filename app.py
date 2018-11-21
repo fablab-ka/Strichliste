@@ -1,83 +1,84 @@
-from bottle import Bottle, route, run, debug, template, static_file, request, error
+from bottle import Bottle, route, run, template, static_file, request, error, hook, get, post
+import bottle
+from beaker.middleware import SessionMiddleware
 import json
 import datetime
 import demo_database as database
 
-app = Bottle()
-selected_customer = None
-selected_product = None
+session_opts = {
+    'session.type': 'file',
+    'session.cookie_expires': 300,
+    'session.data_dir': './data',
+    'session.auto': True
+}
+app = SessionMiddleware(bottle.app(), session_opts)
 
-def show_error(error_title, error_text=""):
-    return template('error.tpl', error_title=error_title, error_text=error_text)
+@hook('before_request')
+def setup_request():
+    request.session = request.environ['beaker.session']
 
-def select_product(product):
-    global selected_product
-    selected_product = product
+def show_error(error_title, error_text="", timeout=5):
+    return template('tpl/error.tpl', error_title=error_title, error_text=error_text, timeout=timeout)
 
-def select_customer(customer):
-    global selected_customer
-    selected_customer = customer
-
-@app.error(500)
+@error(500)
 def handle_error500(error):
     return show_error("Es ist ein interner Fehler aufgetreten", error)
 
-@app.get('/')
+@get('/')
 def main_menu():
-    global selected_product
-    selected_product = None
-    global selected_customer
-    select_customer = None
-    return template('main.tpl', customers=database.get_customers())
+    request.session['product'] = None
+    request.session['customer'] = None
+    return template('tpl/main.tpl', customers=database.get_customers())
 
-@app.route('/static/<type>/<filename>')
+@route('/static/<type>/<filename>')
 def serve_css(type, filename):
     return static_file(filename, root=type+'/')
 
-@app.get('/customer/<id>')
+@get('/customer/<id>')
 def sel_customer(id):
-    select_customer(database.get_customer_by_id(id))
-    return template('products.tpl', products=database.get_products(), customer=selected_customer)
+    customer = database.get_customer_by_id(id)
+    request.session['customer'] = customer
+    return template('tpl/products.tpl', products=database.get_products(), customer=customer)
 
-@app.route('/confirm')
+@route('/confirm')
 def confirm():
-    database.buy(selected_customer['id'], selected_product['id'])
-    return show_error("Kauf erfolgreich!")
+    database.buy(request.session['customer']['id'], request.session['product']['id'])
+    return show_error("Kauf erfolgreich!", timeout=2)
 
-@app.get('/products')
+@get('/products')
 def products():
-    return template('products.tpl', customer=selected_customer, products=database.get_products())
+    return template('tpl/products.tpl', customer=request.session['customer'], products=database.get_products())
 
-@app.get('/product/<id>')
+@get('/product/<id>')
 def show_product(id):
     product = database.get_product_by_id(id)
-    select_product(product)
-    return template('confirm.tpl', product=selected_product, customer=selected_customer)
+    request.session['product'] = product
+    return template('tpl/confirm.tpl', product=product, customer=request.session['customer'])
 
-@app.post('/product_barcode')
+@post('/product_barcode')
 def submit_barcode():
     barcode = request.forms.get('barcode')
     product = database.get_product_by_barcode(barcode)
     if product == None:
-        return show_error("Barcode nicht gefunden", "Zu diesem Barcode wurde kein Produkt gefunden.")
-    select_product(product)
-    return template('confirm.tpl',  product=selected_product, customer=selected_customer)
+        return show_error("Barcode nicht gefunden", "Zu diesem Barcode wurde kein Produkt gefunden: " + barcode)
+    request.session['product'] = product
+    return template('tpl/confirm.tpl',  product=product, customer=request.session['customer'])
 
-@app.post('/customer_barcode')
+@post('/customer_barcode')
 def submit_barcode():
     barcode = request.forms.get('barcode')
     customer = database.get_customer_by_rfid(barcode)
     if customer == None:
         return show_error("RFID/Barcode nicht gefunden", "Zu dieser RFID oder Barcode"
-                                                         " wurde kein Mitglied gefunden.")
-    select_customer(customer)
-    return template('product.tpl', product=customer)
+                                                         " wurde kein Mitglied gefunden: " + barcode)
+    request.session['customer'] = customer
+    return template('tpl/product.tpl', product=customer)
 
-@app.get('/create_customer')
+@get('/create_customer')
 def create_user():
-    return template('create_user.tpl')
+    return template('tpl/create_user.tpl')
 
-@app.post('/new_user')
+@post('/new_user')
 def new_user():
     name = request.forms.get('name')
     pin = request.forms.get('pin')
