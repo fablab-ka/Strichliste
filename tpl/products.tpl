@@ -14,7 +14,7 @@
 <div class="box">
     {{product['name']}}
     <br>
-    {{"{:.2f}".format(product['price'])}}€
+    {{"{:.2f}".format(-product['price'])}}€
 </div>
 </a>
 %end

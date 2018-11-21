@@ -1,8 +1,8 @@
 <head>
     <title>Strichliste</title>
     <link rel="stylesheet" type="text/css" href="/static/css/style.css">
-
 </head>
+<meta http-equiv="refresh" content="120" >
 <body>
 <h1>Hallo {{customer['name']}}, du willst Geld einzahlen</h1>
 <h2>Dein Kontostand beträgt derzeit {{"{:.2f}".format(customer['credit'])}}</h2>
@@ -10,12 +10,12 @@
     Betrag:<br>
     <table>
         <tr>
-            <td><input class="arr up" type="button" onclick='document.getElementById("1xx.xx").stepUp()'></td>
-            <td><input class="arr up" type="button" onclick='document.getElementById("x1x.xx").stepUp()'></td>
-            <td><input class="arr up" type="button" onclick='document.getElementById("xx1.xx").stepUp()'></td>
+            <td><input class="key up" type="button" onclick='document.getElementById("1xx.xx").stepUp()'></td>
+            <td><input class="key up" type="button" onclick='document.getElementById("x1x.xx").stepUp()'></td>
+            <td><input class="key up" type="button" onclick='document.getElementById("xx1.xx").stepUp()'></td>
             <td></td>
-            <td><input class="arr up" type="button" onclick='document.getElementById("xxx.1x").stepUp()'></td>
-            <td><input class="arr up" type="button" onclick='document.getElementById("xxx.x1").stepUp()'></td>
+            <td><input class="key up" type="button" onclick='document.getElementById("xxx.1x").stepUp()'></td>
+            <td><input class="key up" type="button" onclick='document.getElementById("xxx.x1").stepUp()'></td>
             <td></td>
         </tr>
         <tr>
@@ -28,12 +28,12 @@
             <td>€</td>
         </tr>
         <tr>
-            <td><input class="arr down" type="button" onclick='document.getElementById("1xx.xx").stepDown()'></td>
-            <td><input class="arr down" type="button" onclick='document.getElementById("x1x.xx").stepDown()'></td>
-            <td><input class="arr down" type="button" onclick='document.getElementById("xx1.xx").stepDown()'></td>
+            <td><input class="key down" type="button" onclick='document.getElementById("1xx.xx").stepDown()'></td>
+            <td><input class="key down" type="button" onclick='document.getElementById("x1x.xx").stepDown()'></td>
+            <td><input class="key down" type="button" onclick='document.getElementById("xx1.xx").stepDown()'></td>
             <td></td>
-            <td><input class="arr down" type="button" onclick='document.getElementById("xxx.1x").stepDown()'></td>
-            <td><input class="arr down" type="button" onclick='document.getElementById("xxx.x1").stepDown()'></td>
+            <td><input class="key down" type="button" onclick='document.getElementById("xxx.1x").stepDown()'></td>
+            <td><input class="key down" type="button" onclick='document.getElementById("xxx.x1").stepDown()'></td>
             <td></td>
         </tr>
     </table>
