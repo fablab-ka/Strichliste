@@ -8,6 +8,8 @@
 {{error_text}}
 <br><br><br>
 Du wirst in {{timeout}}s zur Startseite weitergeleitet.
+<br>
+<input class="btn" type="button" onclick="location.href='/'" value="Zurück">
 
 </body>
 </html>

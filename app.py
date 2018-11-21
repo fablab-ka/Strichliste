@@ -17,7 +17,7 @@ app = SessionMiddleware(bottle.app(), session_opts)
 def setup_request():
     request.session = request.environ['beaker.session']
 
-def show_error(error_title, error_text="", timeout=5):
+def show_error(error_title, error_text="", timeout=120):
     return template('tpl/error.tpl', error_title=error_title, error_text=error_text, timeout=timeout)
 
 @error(500)
@@ -98,12 +98,20 @@ def register_payment():
     return show_error(str(value) + "€ eingezahlt, dein neuer Kontostand beträgt "
                       + str(request.session['customer']['credit']) + "€!")
 
+@get("/keypad")
+def show_keypad():
+    return template('tpl/keypad')
+
+@post('/keypad')
+def process_keypad():
+    pin = request.forms.get('pin')
+
+
 @post('/new_user')
 def new_user():
     name = request.forms.get('name')
-    #pin = request.forms.get('pin')
     rfid = request.forms.get('rfid')
-    #database.create_user(name, rfid)
+    database.create_user(name, rfid)
 
 #debug(True)
 run(app, host='127.0.0.1', port=8081)
