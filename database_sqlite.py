@@ -1,3 +1,5 @@
+"""Summary
+"""
 import sqlite3
 from pprint import pprint
 # Customers: List of dicts, containing
@@ -14,78 +16,160 @@ from pprint import pprint
 # Returns list of all products
 
 def run_query(query_text, arg=None):
+    """runs basic sql querys, including opening and closing the connection
+
+    Args:
+        query_text (Strin): Select / other basic statement with a single parameter
+        arg (None, optional): optional parameter
+
+    Returns:
+        object: Description
+    """
     connection = sqlite3.connect('datenbank.db')
     cursor = connection.cursor()
     if arg:
-        print(query_text)
-        print(arg)
-        res = cursor.execute(query_text,arg).fetchall()
+        res = cursor.execute(query_text, arg).fetchall()
     else:
         res = cursor.execute(query_text).fetchall()
     cursor.close()
     connection.close()
     return res
 
-def update_db(update_text, arg1, arg2):
+def get_balance(customer):
+    """Generates the current balance according to the transactions
+
+    Args:
+        customer (int): customer ID
+
+    Returns:
+        float: current balance (negative is actually +)
+    """
     connection = sqlite3.connect('datenbank.db')
     cursor = connection.cursor()
-    res = cursor.execute(update_text, (arg1, arg2)).fetchall()
+    res = cursor.execute('SELECT sum(amout) FROM transaction WHERE c_id = ?', customer).fetchone()
     connection.commit()
     cursor.close()
     connection.close()
-    return
+    return res[0]
+
 
 
 def get_products():
+    """Summary
+
+    Returns:
+        Array[Dict]: returns an array of dicts of the products
+    """
     result = run_query('SELECT * FROM product')
     products = []
     for row in result:
+        if row[0] == '1':
+            continue
         product = {'id': row[0], 'name':row[1], 'price': float(row[2]), 'ean13': row[3]}
         products.append(product)
     return products
 
 
 def get_customers():
+    """returns an array of dicts with the customers
+
+    Returns:
+        Array[Dict]: returns an array of dicts of the customers
+    """
     result = run_query('SELECT * FROM customer')
     customers = []
     for row in result:
-        customer = {'id': row[0], 'name':row[1], 'credit': float(row[2]), 'rfid': row[3]}
+        balance = get_balance(row[0])
+        customer = {'id': row[0], 'name':row[1], 'credit': float(balance), 'rfid': row[2]}
         customers.append(customer)
     return customers
 
-# Returns Product by ID, returns None if none found
 def get_product_by_id(id):
-    result = run_query('SELECT * FROM product WHERE id=?',id)
+    """Returns product by ID, returns None if none found
+
+    Args:
+        id (int): Prodict ID
+
+    Returns:
+        Dict: id, name, price, barcode
+    """
+    result = run_query('SELECT * FROM product WHERE id=?', id)
     result = result[0]
     product = {'id': result[0], 'name': result[1], 'price': float(result[2]), 'ean13': result[3]}
     pprint(product)
     return product
 
-# Returns Product by barcode, returns None if none found
 def get_product_by_barcode(barcode):
+    """Returns product by barcode, returns None if none found
+
+    Args:
+        barcode (TYPE): Description
+
+    Returns:
+        TYPE: Description ###TODO: needs to be implemented
+    """
     return None
 
 
 # Returns Customer by Barcode, returns None if none found
 def get_customer_by_rfid(rfid):
+    """Returns customer by barcode, returns None if none found
+
+    Args:
+        rfid (String): RFID card
+
+    Returns:
+        Dict: id, name, current balance, rfid ###TODO: needs to be implemented
+    """
     return None
 
 # Returns Customer by ID, returns None if none found
 def get_customer_by_id(id):
-    result = run_query('SELECT * FROM customer WHERE id=?',id)
+    """Returns customer by ID, returns None if none found
+
+    Args:
+        id (int): customer ID
+
+    Returns:
+        Dict: id, name, current balance, rfid
+    """
+    result = run_query('SELECT * FROM customer WHERE id=?', id)
     result = result[0]
-    customer = {'id': result[0], 'name': result[1], 'credit': result[2], 'rfid': result[3]}
+    balance = get_balance(id)
+    customer = {'id': id, 'name': result[1], 'credit': balance, 'rfid': result[2]}    ### FIXM
     return customer
 
-# Processes a sales order.
 def buy(customer, product):
-    res =get_product_by_id(str(product))
-    pprint(res)
-    product_price = res["price"]
-    update_db('UPDATE customer SET credit = credit - ? WHERE id = ?', float(product_price), str(customer))
-    return
+    """Processes a sales order, writes the current price and timestamp for history
+
+    Args:
+        customer (int): Customer ID
+        product (int): Prodict ID
+
+    Returns:
+        None: Success / Fail need to be implemented ###TODO
+    """
+    res = get_product_by_id(str(product))
+    price = res['price']
+    connection = sqlite3.connect('datenbank.db')
+    cursor = connection.cursor()
+    cursor.execute('INSERT INTO transaction (c_id, p_id, amount) VALUES (?, ?, ?)',
+                   (customer, product, price)).fetchall()
+    connection.commit()
+    cursor.close()
+    connection.close()
+    return None
 
 def create_user(username, rfid):
+    """Creates an user
+
+    Args:
+        username (String): username
+        rfid (String): RFID Card
+
+    Returns:
+        None: Success / Fail need to be implemented ###TODO
+    """
     connection = sqlite3.connect('datenbank.db')
     cursor = connection.cursor()
     cursor.execute('INSERT INTO customer (name, rfid) VALUES ? ?', (username, rfid)).fetchall()
