@@ -171,6 +171,7 @@ def register_transaction(customer, amount):
         None: Success / Fail need to be implemented ###TODO
     """
     connection = sqlite3.connect('datenbank.db')
+    
     cursor = connection.cursor()
     res = cursor.execute('INSERT INTO `transaction` (c_id, p_id, amount) VALUES (?, ?, ?)',
                    (customer, 1, float(amount))).fetchall
