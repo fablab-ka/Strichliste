@@ -46,12 +46,11 @@ def get_balance(customer):
     """
     connection = sqlite3.connect('datenbank.db')
     cursor = connection.cursor()
-    res = cursor.execute('SELECT sum(amout) FROM transaction WHERE c_id = ?', customer).fetchone()
+    res = cursor.execute('SELECT sum(amount) FROM `transaction` WHERE c_id = ?', str(customer)).fetchall()
     connection.commit()
     cursor.close()
     connection.close()
-    return res[0]
-
+    return res
 
 
 def get_products():
@@ -63,7 +62,7 @@ def get_products():
     result = run_query('SELECT * FROM product')
     products = []
     for row in result:
-        if row[0] == '1':
+        if row[0] == 1:
             continue
         product = {'id': row[0], 'name':row[1], 'price': float(row[2]), 'ean13': row[3]}
         products.append(product)
@@ -79,8 +78,9 @@ def get_customers():
     result = run_query('SELECT * FROM customer')
     customers = []
     for row in result:
-        balance = get_balance(row[0])
-        customer = {'id': row[0], 'name':row[1], 'credit': float(balance), 'rfid': row[2]}
+        balance = get_balance(row[0])[0][0]
+        pprint(balance)
+        customer = {'id': row[0], 'name':row[1], 'credit': balance, 'rfid': row[2]}
         customers.append(customer)
     return customers
 
@@ -135,11 +135,13 @@ def get_customer_by_id(id):
     """
     result = run_query('SELECT * FROM customer WHERE id=?', id)
     result = result[0]
-    balance = get_balance(id)
+    balance = get_balance(id)[0][0]
+    if not balance:
+        balance = 0.0
     customer = {'id': id, 'name': result[1], 'credit': balance, 'rfid': result[2]}    ### FIXM
     return customer
 
-def buy(customer, product):
+def register_transaction(customer, product):
     """Processes a sales order, writes the current price and timestamp for history
 
     Args:
@@ -153,8 +155,8 @@ def buy(customer, product):
     price = res['price']
     connection = sqlite3.connect('datenbank.db')
     cursor = connection.cursor()
-    cursor.execute('INSERT INTO transaction (c_id, p_id, amount) VALUES (?, ?, ?)',
-                   (customer, product, price)).fetchall()
+    cursor.execute('INSERT INTO `transaction` (c_id, p_id, amount) VALUES (?, ?, ?)',
+                   (int(customer), int(product), float(price))).fetchall()
     connection.commit()
     cursor.close()
     connection.close()
@@ -172,7 +174,7 @@ def create_user(username, rfid):
     """
     connection = sqlite3.connect('datenbank.db')
     cursor = connection.cursor()
-    cursor.execute('INSERT INTO customer (name, rfid) VALUES ? ?', (username, rfid)).fetchall()
+    cursor.execute('INSERT INTO customer (name, rfid) VALUES (?, ?)', (str(username), str(rfid)))
     connection.commit()
     cursor.close()
     connection.close()
