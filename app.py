@@ -42,7 +42,7 @@ def sel_customer(id):
 
 @route('/confirm')
 def confirm():
-    database.register_transaction(request.session['customer']['id'], request.session['product']['id'])
+    database.pay(request.session['customer']['id'], request.session['product']['id'])
     return show_error("Kauf erfolgreich!", timeout=2)
 
 @get('/products')
