@@ -72,7 +72,7 @@ def submit_barcode():
         return show_error("RFID/Barcode nicht gefunden", "Zu dieser RFID oder Barcode"
                                                          " wurde kein Mitglied gefunden: " + barcode)
     request.session['customer'] = customer
-    return template('tpl/product.tpl', product=customer)
+    return template('tpl/products.tpl', customer=customer)
 
 @get('/create_customer')
 def create_user():
