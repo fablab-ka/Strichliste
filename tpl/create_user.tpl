@@ -12,7 +12,7 @@
     <!--PIN<br>-->
     <!--<input type="text" name="pin"> <br><br>-->
     RFID<br>
-    <input type="text" name="rfid" id="barcode" style="width:300px;height:50px" required> <br><br>
+    <input type="text" name="rfid" id="barcode" style="width:300px;height:50px"> <br><br>
     <input type="submit" class="btn" style="height:100px;width:300px" value="Erstellen">
 </form>
 

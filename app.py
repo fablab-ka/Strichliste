@@ -81,8 +81,9 @@ def create_user():
 @post('/new_user')
 def new_user():
     name = request.forms.get('name')
-    pin = request.forms.get('pin')
+    #pin = request.forms.get('pin')
     rfid = request.forms.get('rfid')
+    #database.create_user(name, rfid)
 
 #debug(True)
 run(app, host='127.0.0.1', port=8081)
