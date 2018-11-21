@@ -1,6 +1,8 @@
 
 document.onkeyup = function (evt) {
     var bar = document.getElementById("barcode");
+    var regex = new RegExp("^[a-zA-Z0-9]+$");
+
     if(!bar) {
         alert("No Barcode field found!");
         return;
@@ -8,9 +10,9 @@ document.onkeyup = function (evt) {
     if (evt.keyCode == 13)// Enter key pressed
     {
         document.forms[0].submit();;
-    } else {
+    } else if(evt.keyCode >= 49 && evt.keyCode <= 90){
         //let key = Number(evt.key)
         //if(!isNaN(key))
-        bar.value += evt.key;
+        bar.value += evt.key.toLowerCase();
     };
 }

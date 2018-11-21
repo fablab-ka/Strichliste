@@ -4,5 +4,4 @@ $(document).ready(function(){
     if(key == null)
         return;
     key.empty();
-
 }
