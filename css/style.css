@@ -37,6 +37,10 @@ body {
     align-items: center;
     outline:none;
     border:none;
+    text-align:center;
+    color:white;
+    line-height:60px;
+    font-size:32px;
 }
 
 .box {

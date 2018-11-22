@@ -1,4 +1,4 @@
-from bottle import Bottle, route, run, template, static_file, request, error, hook, get, post
+from bottle import Bottle, route, run, template, static_file, request, error, hook, get, post, server_names
 import bottle
 from beaker.middleware import SessionMiddleware
 import json
@@ -87,6 +87,8 @@ def register_payment():
     value  = float(request.forms.get('1xx.xx')) * 100.0
     value += float(request.forms.get('x1x.xx')) * 10.0
     value += float(request.forms.get('xx1.xx')) * 1.0
+    if(value < 0 or value > 999):
+        return show_error("Falsche Zahl eingegeben!", "Du kannst nur zwischen 0€ und 999€ einzahlen.")
 
     customer_id = request.session['customer']['id']
     print(value)
@@ -112,4 +114,4 @@ def new_user():
     database.create_user(name, rfid)
 
 #debug(True)
-run(app, host='127.0.0.1', port=8081)
+run(app, host='127.0.0.1', server='auto', port=8081)
