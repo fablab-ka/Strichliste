@@ -114,4 +114,4 @@ def new_user():
     database.create_user(name, rfid)
 
 #debug(True)
-run(app, host='127.0.0.1', server='fapws3', port=8081)
+run(app, host='127.0.0.1', port=8081)

@@ -139,7 +139,7 @@ def get_customer_by_id(id):
     customer = {'id': id, 'name': result[1], 'credit': balance, 'rfid': result[2]}    ### FIXM
     return customer
 
-def buy(customer, product):
+def pay(customer, product):
     """Processes a sales order, writes the current price and timestamp for history
 
     Args:
@@ -172,7 +172,7 @@ def register_transaction(customer, amount):
     """
     connection = sqlite3.connect('datenbank.db')
     cursor = connection.cursor()
-    res = cursor.execute('INSERT INTO `transaction` (c_id, p_id, amount) VALUES (?, ?, ?)',
+    cursor.execute('INSERT INTO `transaction` (c_id, p_id, amount) VALUES (?, ?, ?)',
                    (customer, 1, float(amount))).fetchall
     connection.commit()
     cursor.close()
