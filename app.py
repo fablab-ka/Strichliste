@@ -80,7 +80,7 @@ def create_user():
 
 @get('/cash_payin')
 def cash_payin():
-    return template('tpl/cash_payin', customer = database.get_customer_by_id("1"))
+    return template('tpl/cash_payin', customer = database.get_customer_by_id(str(request.session['customer']['id'])))
 
 @post('/cash_payin')
 def register_payment():
