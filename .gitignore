@@ -2,3 +2,8 @@
 data
 __pycache__/database_sqlite.cpython-36.pyc
 __pycache__/database_sqlite.cpython-37.pyc
+.idea/Strichliste.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/workspace.xml
+__pycache__/app.cpython-37.pyc

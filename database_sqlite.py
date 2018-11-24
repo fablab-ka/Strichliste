@@ -1,7 +1,6 @@
 """Summary
 """
 import sqlite3
-from pprint import pprint
 # Customers: List of dicts, containing
 #   name: String
 #   id: int, unique
