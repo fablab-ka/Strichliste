@@ -192,8 +192,12 @@ def create_user(username, rfid):
     """
     connection = sqlite3.connect('datenbank.db')
     cursor = connection.cursor()
-    cursor.execute('INSERT INTO customer (name, rfid) VALUES (?, ?)', (str(username), str(rfid)))
+    try:
+        res = cursor.execute('INSERT INTO customer (name, rfid) VALUES (?, ?)', (str(username), str(rfid))).fetchall()
+    except:
+        return "error in creating user"
+        #TODO Impleḿent nicer exception
     connection.commit()
     cursor.close()
     connection.close()
-    return None
+    return res
