@@ -154,8 +154,7 @@ def pay(customer, product):
     price = res['price']
     connection = sqlite3.connect('datenbank.db')
     cursor = connection.cursor()
-    cursor.execute('INSERT INTO `transaction` (c_id, p_id, amount) VALUES (?, ?, ?)',
-                   (int(customer), int(product), float(price))).fetchall()
+    cursor.execute('INSERT INTO `transaction` (c_id, p_id, amount, quantity) VALUES (?, ?, ?, ?)',(int(customer), int(product), float(price), 1)).fetchall()
     connection.commit()
     cursor.close()
     connection.close()
@@ -173,8 +172,8 @@ def register_transaction(customer, amount):
     """
     connection = sqlite3.connect('datenbank.db')
     cursor = connection.cursor()
-    cursor.execute('INSERT INTO `transaction` (c_id, p_id, amount) VALUES (?, ?, ?)',
-                   (customer, 1, float(amount))).fetchall
+    cursor.execute('INSERT INTO `transaction` (c_id, p_id, amount, quantity) VALUES (?, ?, ?, ?)',
+                   (customer, 1, float(amount), 1)).fetchall
     connection.commit()
     cursor.close()
     connection.close()
@@ -193,11 +192,11 @@ def create_user(username, rfid):
     connection = sqlite3.connect('datenbank.db')
     cursor = connection.cursor()
     try:
-        res = cursor.execute('INSERT INTO customer (name, rfid) VALUES (?, ?)', (str(username), str(rfid))).fetchall()
+        cursor.execute('INSERT INTO customer (name, rfid) VALUES (?, ?)', (str(username), str(rfid))).fetchall()
     except:
-        return "error in creating user"
+        return False
         #TODO Impleḿent nicer exception
     connection.commit()
     cursor.close()
     connection.close()
-    return res
+    return True
