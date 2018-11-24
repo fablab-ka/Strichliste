@@ -78,8 +78,9 @@ def get_customers():
     result = run_query('SELECT * FROM customer')
     customers = []
     for row in result:
-        balance = get_balance(row[0])[0][0]
-        customer = {'id': row[0], 'name':row[1], 'credit': balance, 'rfid': row[2]}
+        if row[0] == 1:
+            continue
+        customer = {'id': row[0], 'name':row[1], 'credit': 0, 'rfid': row[2]}
         customers.append(customer)
     return customers
 

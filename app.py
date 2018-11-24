@@ -56,7 +56,7 @@ def show_product(id):
     return template('tpl/confirm.tpl', product=product, customer=request.session['customer'])
 
 @post('/product_barcode')
-def submit_barcode():
+def submit_product_barcode():
     barcode = request.forms.get('barcode')
     product = database.get_product_by_barcode(barcode)
     if product == None:
@@ -65,7 +65,7 @@ def submit_barcode():
     return template('tpl/confirm.tpl',  product=product, customer=request.session['customer'])
 
 @post('/customer_barcode')
-def submit_barcode():
+def submit_customer_barcode():
     barcode = request.forms.get('barcode')
     customer = database.get_customer_by_rfid(barcode)
     if customer == None:
