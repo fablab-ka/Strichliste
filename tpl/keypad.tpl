@@ -3,10 +3,10 @@
     <link rel="stylesheet" type="text/css" href="/static/css/style.css">
 </head>
 <body>
-<h2>Hallo Name!</h2>
-<h2>Bitte identifiziere dich mit deiner PIN!</h2>
+<h2>Hallo Name! Bitte identifiziere dich mit deiner PIN!</h2>
+<div style="width:300px;height:500px;">
 <form action="/keypad" method="post">
-    <input type="text" style="width:300px;height:60px" name="pin" id="pin">
+    <input type="text" style="width:100%;height:60px;font-size:40px" name="pin" id="pin">
 
     <table>
         <tr>
@@ -29,15 +29,15 @@
             <td><input class="btn key" type="button" onclick='document.getElementById("pin").value += 0' value="0"></td>
             <td><input class="btn key" type="button" onclick='document.getElementById("pin").value = ""' value="⌫"></td>
         </tr>
+        <tr>
+            <td colspan="3"><input class="btn key" style="width:230px" type="submit"value="Weiter"></td>
+        </tr>
     </table>
-
-    <input class="btn" type="submit" value="Weiter">
-    <input class="btn" type="button" onclick="location.href='/'" value="Zurück">
 
     <input type="text" style="display:none" value="1" name="">
 
 </form>
-
+</div>
 <div id="keyboard"></div>
 
 </body>

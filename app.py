@@ -28,6 +28,7 @@ def handle_error500(error):
 def main_menu():
     request.session['product'] = None
     request.session['customer'] = None
+    request.session['customer_verified'] = False
     return template('tpl/main.tpl', customers=database.get_customers())
 
 @route('/static/<type>/<filename>')
@@ -38,7 +39,11 @@ def serve_css(type, filename):
 def sel_customer(id):
     customer = database.get_customer_by_id(id)
     request.session['customer'] = customer
-    return template('tpl/products.tpl', products=database.get_products(), customer=customer)
+    if 'pin' in customer:
+        return template('tpl/keypad.tpl', customer=customer)
+    else:
+        request.session['user_verified'] = True
+        return template('tpl/products.tpl', products=database.get_products(), customer=customer)
 
 @route('/confirm')
 def confirm():
@@ -105,7 +110,11 @@ def show_keypad():
 @post('/keypad')
 def process_keypad():
     pin = request.forms.get('pin')
-
+    if pin == request.session['customer'].pin:
+        request.session['customer_verifierd'] = True
+        return template('tpl/products.tpl', products=database.get_products(), customer=request.session['customer'])
+    else:
+        return show_error("Falsche Pin", "Du hast leider eine falsche Pin eingegeben.", 5)
 
 @post('/new_user')
 def new_user():
