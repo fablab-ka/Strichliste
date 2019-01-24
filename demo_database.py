@@ -11,11 +11,7 @@ products = [
 ]
 
 customers = [
-<<<<<<< Updated upstream
     {'id': 0, 'name': 'Philip C', 'credit': 0, 'rfid': 'asd'},
-=======
-    {'id': 0, 'name': 'Philip C', 'credit': 0, 'rfid': 'asdf'},
->>>>>>> Stashed changes
     {'id': 1, 'name': 'Max M', 'credit': 0, 'rfid': ''},
     {'id': 2, 'name': 'Lukas 3', 'credit': 0, 'rfid': ''},
     {'id': 3, 'name': 'Otto O', 'credit': 0, 'rfid': ''},
