@@ -28,14 +28,8 @@
 
 
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-<script src="/static/js/jkeyboard.js"></script>
 <!--<script language="javascript" type="text/javascript" src="/static/js/barcode.js"></script>-->
 
-<script>
-    $('#keyboard').jkeyboard({
-  layout: "english",
-  input: $('#name')
-});
-</script>
+
 </body>
 </html>
