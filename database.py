@@ -1,6 +1,7 @@
 # Customers: List of dicts, containing
 #   name: String
 #   id: int, unique
+#   pin: int[4]
 #   rfid: String
 #   credit: float, current financial status
 

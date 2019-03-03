@@ -3,6 +3,7 @@ import bottle
 from beaker.middleware import SessionMiddleware
 import json
 import datetime
+import control
 import database_sqlite as database
 
 session_opts = {
@@ -13,16 +14,25 @@ session_opts = {
 }
 app = SessionMiddleware(bottle.app(), session_opts)
 
+
 @hook('before_request')
 def setup_request():
     request.session = request.environ['beaker.session']
 
+
 def show_error(error_title, error_text="", timeout=120):
     return template('tpl/error.tpl', error_title=error_title, error_text=error_text, timeout=timeout)
+
 
 @error(500)
 def handle_error500(error):
     return show_error("Es ist ein interner Fehler aufgetreten", error)
+
+
+@route('/static/<type>/<filename>')
+def serve_css(type, filename):
+    return static_file(filename, root=type+'/')
+
 
 @get('/')
 def main_menu():
@@ -31,9 +41,6 @@ def main_menu():
     request.session['customer_verified'] = False
     return template('tpl/main.tpl', customers=database.get_customers())
 
-@route('/static/<type>/<filename>')
-def serve_css(type, filename):
-    return static_file(filename, root=type+'/')
 
 @get('/customer/<id>')
 def sel_customer(id):
@@ -45,20 +52,32 @@ def sel_customer(id):
         request.session['user_verified'] = True
         return template('tpl/products.tpl', products=database.get_products(), customer=customer)
 
-@route('/confirm')
-def confirm():
-    database.pay(request.session['customer']['id'], request.session['product']['id'])
-    return show_error("Kauf erfolgreich!", timeout=2)
 
-@get('/products')
-def products():
-    return template('tpl/products.tpl', customer=request.session['customer'], products=database.get_products())
+@get("/keypad")
+def show_keypad():
+    return template('tpl/keypad')
+
+
+@post('/keypad')
+def process_keypad():
+    pin = request.forms.get('pin')
+    if pin == request.session['customer'].pin:
+        request.session['customer_verified'] = True
+        return template('tpl/products.tpl', products=database.get_products(), customer=request.session['customer'])
+    else:
+        return show_error("Falsche Pin", "Du hast leider eine falsche Pin eingegeben.", 5)
 
 @get('/product/<id>')
 def show_product(id):
     product = database.get_product_by_id(id)
     request.session['product'] = product
     return template('tpl/confirm.tpl', product=product, customer=request.session['customer'])
+
+@route('/confirm')
+def confirm():
+    database.pay(request.session['customer']['id'], request.session['product']['id'])
+    return show_error("Kauf erfolgreich!", timeout=2)
+
 
 @post('/product_barcode')
 def submit_product_barcode():
@@ -83,9 +102,11 @@ def submit_customer_barcode():
 def create_user():
     return template('tpl/create_user.tpl')
 
+
 @get('/cash_payin')
 def cash_payin():
     return template('tpl/cash_payin', customer = database.get_customer_by_id(str(request.session['customer']['id'])))
+
 
 @post('/cash_payin')
 def register_payment():
@@ -103,24 +124,13 @@ def register_payment():
     return show_error(str(value) + "€ eingezahlt, dein neuer Kontostand beträgt "
                       + str(request.session['customer']['credit']) + "€!")
 
-@get("/keypad")
-def show_keypad():
-    return template('tpl/keypad')
-
-@post('/keypad')
-def process_keypad():
-    pin = request.forms.get('pin')
-    if pin == request.session['customer'].pin:
-        request.session['customer_verifierd'] = True
-        return template('tpl/products.tpl', products=database.get_products(), customer=request.session['customer'])
-    else:
-        return show_error("Falsche Pin", "Du hast leider eine falsche Pin eingegeben.", 5)
 
 @post('/new_user')
 def new_user():
     name = request.forms.get('name')
     rfid = request.forms.get('rfid')
+    pin = request.forms.get('pin')
+    email = request.forms.get('email')
     database.create_user(name, rfid)
 
-#debug(True)
 run(app, host='127.0.0.1', port=8081)

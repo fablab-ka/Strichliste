@@ -2,9 +2,10 @@
     <title>Strichliste</title>
     <link rel="stylesheet" type="text/css" href="/static/css/style.css">
 </head>
-<meta http-equiv="refresh" content="20; URL=/">
+<meta http-equiv="refresh" content="200; URL=/">
 <body>
 <h1>Kauf bestätigen?</h1>
+
 <ul>
     <li>
         Käufer: {{customer['name']}}
