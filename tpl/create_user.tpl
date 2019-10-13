@@ -7,21 +7,17 @@
 <body>
 <h1>Neuen Benutzer erstellen</h1>
 <form action="/new_user" method="post">
-    <table>
-        <tr>
-            <td><h4>Name</h4></td>
-            <td><h4>RFID</h4></td>
-        </tr>
-        <tr>
-            <td><input type="text" name="name" style="width:300px;height:50px" id="name" required></td>
-            <td><input type="text" name="rfid" id="barcode" style="width:300px;height:50px"></td>
-        </tr>
-        <tr>
-            <td><input class="btn" type="button" onclick="location.href='/'" value="Zurück"></td>
-            <td><input type="submit" class="btn" style="height:100px;width:300px" value="Erstellen"></td>
-        </tr>
-    </table>
+    <label for="name">Name</label>
+    <td><input type="text" style="width:300px;height:50px" id="name" required><br>
+    <label for="email">Email</label>
+    <td><input type="email" id="email" style="width:300px;height:50px" required><br>
+    <label for="PIN">PIN (optional)</label>
+    <td><input type="password" patter="(0-9){4,}"id="pin" title="PIN" style="width:300px;height:50px"><br>
+    <label for="name">RFID (optional)</label>
+    <td><input type="text" id="barcode" style="width:300px;height:50px"><br>
 
+    <td><input class="btn" type="button" onclick="location.href='/'" value="Zurück">
+    <td><input type="submit" class="btn" style="height:100px;width:300px" value="Erstellen">
 </form>
 
 <div id="keyboard"></div>
