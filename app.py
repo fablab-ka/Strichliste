@@ -1,10 +1,11 @@
 from bottle import Bottle, route, run, template, static_file, request, error, hook, get, post, server_names
 import bottle
+import dill as pickle
 from beaker.middleware import SessionMiddleware
 import json
 import datetime
 import control
-import database_sqlite as database
+from db_models import *
 
 session_opts = {
     'session.type': 'file',
@@ -39,18 +40,19 @@ def main_menu():
     request.session['product'] = None
     request.session['customer'] = None
     request.session['customer_verified'] = False
-    return template('tpl/main.tpl', customers=database.get_customers())
+    return template('tpl/main.tpl', customers=Customer.select())
 
 
 @get('/customer/<id>')
 def sel_customer(id):
-    customer = database.get_customer_by_id(id)
+
+    customer = Customer.get_by_id(id)
     request.session['customer'] = customer
-    if 'pin' in customer:
+    if customer.pin:
         return template('tpl/keypad.tpl', customer=customer)
     else:
         request.session['user_verified'] = True
-        return template('tpl/products.tpl', products=database.get_products(), customer=customer)
+        return template('tpl/products.tpl', products=Product.select(), customer=customer)
 
 
 @get("/keypad")
@@ -63,26 +65,34 @@ def process_keypad():
     pin = request.forms.get('pin')
     if pin == request.session['customer'].pin:
         request.session['customer_verified'] = True
-        return template('tpl/products.tpl', products=database.get_products(), customer=request.session['customer'])
+        return template('tpl/products.tpl', products=Product.select(), customer=request.session['customer'])
     else:
         return show_error("Falsche Pin", "Du hast leider eine falsche Pin eingegeben.", 5)
 
 @get('/product/<id>')
 def show_product(id):
-    product = database.get_product_by_id(id)
+    product = Product.select(Product.get_id == id)
     request.session['product'] = product
-    return template('tpl/confirm.tpl', product=product, customer=request.session['customer'])
+    customer_name = request.session['customer'].name
+    #product_name = request.session['product'].name
+    return template('tpl/confirm.tpl', customer=customer_name)
 
 @route('/confirm')
 def confirm():
-    database.pay(request.session['customer']['id'], request.session['product']['id'])
+    #database.pay(request.session['customer'], request.session['product'])
+    t = Transaction()
+    t.c = request.session['customer']
+    t.p = request.session['product']
+    t.amount = request.session['product'].price
+    t.quantity = 1
+    t.save()
     return show_error("Kauf erfolgreich!", timeout=2)
 
 
 @post('/product_barcode')
 def submit_product_barcode():
     barcode = request.forms.get('barcode')
-    product = database.get_product_by_barcode(barcode)
+    product = Product.select(Product.ean == barcode)
     if product == None:
         return show_error("Barcode nicht gefunden", "Zu diesem Barcode wurde kein Produkt gefunden: " + barcode)
     request.session['product'] = product
@@ -91,7 +101,7 @@ def submit_product_barcode():
 @post('/customer_barcode')
 def submit_customer_barcode():
     barcode = request.forms.get('barcode')
-    customer = database.get_customer_by_rfid(barcode)
+    customer = Customer.select(Customer.rfid == barcode)
     if customer == None:
         return show_error("RFID/Barcode nicht gefunden", "Zu dieser RFID oder Barcode"
                                                          " wurde kein Mitglied gefunden: " + barcode)
@@ -105,7 +115,7 @@ def create_user():
 
 @get('/cash_payin')
 def cash_payin():
-    return template('tpl/cash_payin', customer = database.get_customer_by_id(str(request.session['customer']['id'])))
+    return template('tpl/cash_payin', customer = Customer.select(Customer.get_id == str(request.session['customer']['id'])))
 
 
 @post('/cash_payin')
@@ -119,19 +129,20 @@ def register_payment():
     customer_id = request.session['customer']['id']
     print(value)
     database.register_transaction(customer_id, value)
-    request.session['customer'] = database.get_customer_by_id(str(customer_id))
+    request.session['customer'] = Customer.select(Customer.get_id == str(customer_id))
 
     return show_error(str(value) + "€ eingezahlt, dein neuer Kontostand beträgt "
-                      + str(request.session['customer']['credit']) + "€!")
+                      + str(request.session['customer'].get_credit()) + "€!")
 
 
 @post('/new_user')
 def new_user():
-    name = request.forms.get('name')
-    rfid = request.forms.get('rfid')
-    pin = request.forms.get('pin')
-    email = request.forms.get('email')
-    database.create_user(name, rfid, email, pin)
+    user= Customer()
+    user.name = request.forms.get('name')
+    user.rfid = request.forms.get('rfid')
+    user.pin = request.forms.get('pin')
+    user.email = request.forms.get('email')
+    user.save()
     return template('tpl/main.tpl', customers=database.get_customers())
 
 

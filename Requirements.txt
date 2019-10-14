@@ -1,3 +1,5 @@
 bottle
 beaker
-python-sqlite-orm
+#python-sqlite-orm
+peewee
+dill

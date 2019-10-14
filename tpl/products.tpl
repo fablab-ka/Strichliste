@@ -6,14 +6,14 @@
 <meta http-equiv="refresh" content="20; URL=/">
 <body>
 
-<h1>Hallo {{customer['name']}}, dein Kontostand beträgt {{"{:.2f}".format(customer['credit'])}}€ Was willst du kaufen?</h1>
+<h1>Hallo {{customer.name}}, dein Kontostand beträgt {{"{:.2f}".format(customer.get_credit())}}€ Was willst du kaufen?</h1>
 <div class="box_container">
 %for product in products:
-<a href="/product/{{product['id']}}">
+<a href="/product/{{product.get_id()}}">
 <div class="box">
-    {{product['name']}}
+    {{product.name}}
     <br>
-    {{"{:.2f}".format(-product['price'])}}€
+    {{"{:.2f}".format(-product.price)}}€
 </div>
 </a>
 %end

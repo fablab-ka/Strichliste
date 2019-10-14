@@ -4,8 +4,8 @@
 </head>
 <meta http-equiv="refresh" content="120" >
 <body>
-<h1>Hallo {{customer['name']}}, du willst Geld einzahlen</h1>
-<h2>Dein Kontostand beträgt derzeit {{"{:.2f}".format(customer['credit'])}}</h2>
+<h1>Hallo {{customer.name}}, du willst Geld einzahlen</h1>
+<h2>Dein Kontostand beträgt derzeit {{"{:.2f}".format(customer.credit)}}</h2>
 <form action="/cash_payin" method="post">
     Betrag:<br>
     <table>

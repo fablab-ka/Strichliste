@@ -8,11 +8,9 @@
 
 <ul>
     <li>
-        Käufer: {{customer['name']}}
+        Käufer: {{customer}}
     </li>
-    <li>
-        Produkt: {{product['name']}}
-    </li>
+
 </ul>
 
 <form action="/confirm">

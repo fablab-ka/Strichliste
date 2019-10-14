@@ -10,13 +10,20 @@ class BaseModel(Model):
         database = database
 
 class Customer(BaseModel):
+    id = AutoField()
     email = TextField(null=True, unique=True)
     name = TextField(unique=True)
     pin = IntegerField(null=True)
     rfid = TextField(null=True, unique=True)
 
+    def get_credit(self):
+        query = (Transaction.select(fn.SUM(Transaction.amount)).where(Transaction.c == self.get_id()).scalar())
+        return query
+
     class Meta:
         table_name = 'customer'
+
+
 
 class Product(BaseModel):
     ean = TextField(null=True)

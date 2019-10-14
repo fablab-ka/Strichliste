@@ -12,9 +12,9 @@
 
 <div class="box_container">
 %for customer in customers:
-<a href="/customer/{{customer['id']}}">
+<a href="/customer/{{customer.get_id()}}">
 <div class="box">
-    {{customer['name']}}
+    {{customer.name}}
 </div>
 </a>
 %end
