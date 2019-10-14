@@ -178,7 +178,7 @@ def register_transaction(customer, amount):
     connection.close()
     return None
 
-def create_user(username, rfid):
+def create_user(username, rfid, email, pin):
     """Creates an user
 
     Args:
@@ -191,7 +191,7 @@ def create_user(username, rfid):
     connection = sqlite3.connect('datenbank.db')
     cursor = connection.cursor()
     try:
-        cursor.execute('INSERT INTO customer (name, rfid) VALUES (?, ?)', (str(username), str(rfid))).fetchall()
+        cursor.execute('INSERT INTO customer (name, rfid, email, pin) VALUES (?, ?, ?, ?)', (str(username), str(rfid), str(email),int(pin))).fetchall()
     except:
         return False
         #TODO Impleḿent nicer exception
