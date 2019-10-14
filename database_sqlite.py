@@ -190,10 +190,10 @@ def create_user(username, rfid, email, pin):
     """
     connection = sqlite3.connect('datenbank.db')
     cursor = connection.cursor()
-    try:
-        cursor.execute('INSERT INTO customer (name, rfid, email, pin) VALUES (?, ?, ?, ?)', (str(username), str(rfid), str(email),int(pin))).fetchall()
-    except:
-        return False
+    #try:
+    cursor.execute('INSERT INTO customer (name, rfid, email, pin) VALUES (?, ?, ?, ?)', (username, rfid, email,pin)).fetchall()
+    #except:
+    #    return False
         #TODO Impleḿent nicer exception
     connection.commit()
     cursor.close()

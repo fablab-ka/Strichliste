@@ -131,6 +131,8 @@ def new_user():
     rfid = request.forms.get('rfid')
     pin = request.forms.get('pin')
     email = request.forms.get('email')
-    database.create_user(name, rfid)
+    database.create_user(name, rfid, email, pin)
+    return template('tpl/main.tpl', customers=database.get_customers())
+
 
 run(app, host='127.0.0.1', port=8081)
